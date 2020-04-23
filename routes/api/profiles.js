@@ -1,5 +1,8 @@
 const express = require('express');
 const router =  express.Router();
+const mongoose = rewuire('mongoose');
+const passport = require('passport');
+const keys = require('../../config/keys')
 
 // @route GET api/profiles/test
 // @desc  Tests profiles route
