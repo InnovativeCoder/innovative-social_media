@@ -95,6 +95,35 @@ router.post('/like/:id', passport.authenticate('jwt', {session: false}), (req,re
                 })
                 .catch(err=> res.status(404).json({postnotfound: 'No post found'}))
         })
+    
+});
+
+// @route POST  api/posts/unlike/:id
+// @desc  UnLike post
+// @access Private
+router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req,res)=> {
+    Profile.findOne({ user: req.user.id })
+        .then(profile => {
+            Post.findById(req.params.id)
+                .then( post=>{
+                    if(post.likes.filter(like => like.user.toString() === req.user.id).length === 0){
+                        res.status(400).json({ notliked: 'You have not liked this post'});
+                    }
+
+                    // Get remove index 
+                    const removeIndex = post.like
+                        .map(item => item.suer.toString())
+                        .indexOf(req.user.id);
+
+                    // Splice out of array
+                    post.likes.splice(removeIndex1);
+
+                    //Save
+                    post.save().then(post=> res.json(post));
+                })
+                .catch(err=> res.status(404).json({postnotfound: 'No post found'}))
+        })
+    
 });
 
 module.exports = router;
